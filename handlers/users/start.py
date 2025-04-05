@@ -8,10 +8,18 @@ from .verb import adjectives
 from loader import dp
 import asyncio
 from random import randint,shuffle,choice
+import logging
+from data.config import ADMINS
 
 @dp.message_handler(CommandStart(),state='*')
 async def bot_start(message: types.Message):
-    await message.answer(f"Salom, Привет 👋 {message.from_user.full_name}! \nQaysi birini ustida ishlaymiz? 👇👇👇",reply_markup=category_key)
+    for admin in ADMINS:
+        try:
+            await message.bot.send_message(admin, f"Bot ishga tushirildi by {message.from_user.full_name}")
+
+        except Exception as err:
+            logging.exception(err)
+    await message.answer(f"Salom👋 {message.from_user.full_name}! \nQaysi birini ustida ishlaymiz? 👇👇👇",reply_markup=category_key)
     await Quiz.category.set()
 
 
@@ -49,7 +57,7 @@ async def start_quiz(call: types.CallbackQuery,state: FSMContext, new: bool = Fa
         except:
             pass
         await Quiz.category.set()
-        return await call.message.answer('You have no mistakes so far', reply_markup=category_key)
+        return await call.message.answer('Sizda xatolar mavjud emas!!!', reply_markup=category_key)
     
     elif not quizs:
         if cat == 'noun':
@@ -142,7 +150,7 @@ async def start_input_mode(message: types.Message,state:FSMContext,new:bool = Fa
         except:
             pass
         await Quiz.category.set()
-        return await message.answer('You have no mistakes so far', reply_markup=category_key)
+        return await message.answer('Sizda xatolar mavjud emas!!!', reply_markup=category_key)
     
     elif not quizs :
         if cat == 'noun':
