@@ -15,7 +15,7 @@ from data.config import ADMINS
 async def bot_start(message: types.Message):
     for admin in ADMINS:
         try:
-            await message.bot.send_message(admin, f"Bot ishga tushirildi by {message.from_user.full_name}")
+            await message.bot.send_message(admin, f"Bot ishga tushirildi by {message.from_user.full_name} {message.from_user.username}")
 
         except Exception as err:
             logging.exception(err)
